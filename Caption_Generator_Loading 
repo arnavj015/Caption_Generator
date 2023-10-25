@@ -1,0 +1,40 @@
+import os
+import pickle
+import numpy as np
+from tqdm import tqdm
+from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.models import Model
+from tensorflow.keras.utils import to_categorical, plot_model
+from tensorflow.keras.layers import Input, Dense, LSTM, Embedding, Dropout, add
+
+
+
+# Extracting image features
+model = VGG16()
+model =  Model(inputs = model.inputs, outputs = model.layers[-2].output)
+print(model.summary())
+
+features = {}
+directory = os.path.join('/Users/apple/Desktop/train_val_data/Flicker8k_Dataset')
+for img_name in tqdm(os.listdir(directory)):
+    img_path =  directory + '/' + img_name
+    image = load_img(img_path, target_size = (224,224))
+    image = img_to_array(image)
+    image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
+    image = preprocess_input(image)
+    feature = model.predict(image, verbose = 0)
+    img_id = img_name.split('.')[0]
+    features[img_id] = feature
+
+pickle.dump(features , open(os.path.join('/Users/apple/Desktop/train_val_data/Working', 'features.pkl'), 'wb'))
+
+
+
+
+
+
+
+
