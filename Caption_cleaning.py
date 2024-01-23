@@ -112,7 +112,7 @@ model.compile(loss = 'categorical_crossentropy', optimizer = 'adam')
 plot_model(model, show_shapes=True, to_file='model.png')
 
 epochs = 15
-batch_size = 32
+batch_size = 16
 steps = len(train) // batch_size
 
 for i in range(epochs):
